@@ -1,0 +1,69 @@
+- hosts: all
+  tasks:
+        - name: Update hdfs-site.xml file
+          blockinfile:
+                path: /etc/hadoop/hdfs-site.xml 
+                insertafter: "<configuration>"
+                block: |
+                        <property>
+                        <name>dfs.name.dir</name>
+                        <value>/nn</value>
+                        </property>
+                state: present
+
+        - name: Update core-site.xml file
+          blockinfile:
+                path: /etc/hadoop/core-site.xml
+                insertafter: "<configuration>"
+                block: |
+                        <property>
+                        <name>fs.default.name</name>
+                        <value>hdfs://{{ groups['master'][0] }}:9001</value>
+                        </property>
+
+        - name: Allowing specific ports for hadoop
+          firewalld:
+                port: "{{ item }}"
+                state: enabled
+                immediate: yes
+                permanent: yes      
+          with_items:
+                - "9001/tcp"
+                - "50070/tcp"
+                - "8020/tcp"
+                - "50470/tcp"
+                - "587/tcp"
+
+        - name: Formating HDFS namenode directory and starting the service
+          command: "{{ item }}"
+          with_items:
+                - hadoop namenode -format Y
+                - hadoop-daemon.sh start namenode
+
+        - name: Sending an e-mail using Gmail SMTP servers
+          mail:
+                host: smtp.gmail.com
+                port: 465
+                username: tapdeb26@gmail.com
+                password: 12345678t..
+                to: Tapajyoti Deb <tapajyotideb@gmail.com>
+                subject: Ansible-report
+                body: Namenode has been successfully provisioned in {{ groups['master'][0] }}
+          delegate_to: localhost 
+
+#        - name: Send notification message via Nexmo
+#          nexmo:
+#                api_key: dcf4f4c8
+#                api_secret: CxAMTgonuushpRj5
+#                src: 917005275355
+#                dest: 918209306937
+#                msg: 'done donaa don done completed'
+#          delegate_to: localhost
+
+#        - twilio:
+#                msg: config is done.
+#                account_sid: ACa1c3a661a7ab9967293ac9e060329011
+#                auth_token: 981a2a38b4567faaa4e52ea784ff1445
+#                from_number: +15005550006
+#                to_number: +919479569278
+#          delegate_to: localhost

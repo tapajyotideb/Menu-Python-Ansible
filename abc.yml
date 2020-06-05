@@ -1,0 +1,5 @@
+- hosts: 192.168.43.12
+  tasks:
+        - copy:
+                dest: "/root/Desktop/"
+                src: "/root/code/menu.py"

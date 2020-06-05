@@ -1,0 +1,10 @@
+- hosts: 192.168.43.216
+  tasks:
+        - name: Send notification message via Nexmo
+          nexmo:
+                api_key: dcf4f4c8
+                api_secret: CxAMTgonuushpRj5
+                src: 917005275355
+                dest: 918209306937
+                msg: 'done donaa don done completed'
+          delegate_to: localhost

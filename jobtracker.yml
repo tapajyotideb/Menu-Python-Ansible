@@ -1,0 +1,39 @@
+- hosts: jobtracker
+  tasks:
+        - name: Update mapred-site.xml file
+          blockinfile:
+                path: /etc/hadoop/mapred-site.xml
+                insertafter: "<configuration>"
+                block: |
+                        <property>
+                        <name>mapred.job.tracker</name>
+                        <value>{{ groups['jobtracker'][0] }}:9002</value>
+                        </property>
+                state: present
+
+        - name: Update core-site.xml file
+          blockinfile:
+                path: /etc/hadoop/core-site.xml
+                insertafter: "<configuration>"
+                block: |
+                        <property>
+                        <name>fs.default.name</name>
+                        <value>hdfs://{{ groups['master'][0] }}:9001</value>
+                        </property>
+
+        - name: Allowing specific ports for hadoop
+          firewalld:
+                port: "{{ item }}"
+                state: enabled
+                immediate: yes
+                permanent: yes
+          with_items:
+                - "9001/tcp"
+                - "8020/tcp"
+                - "8021/tcp"
+                - "9002/tcp"
+                - "50030/tcp"
+                - "50060/tcp"
+
+        - name: Starting the jobtracker service
+          command: hadoop-daemon.sh start jobtracker
