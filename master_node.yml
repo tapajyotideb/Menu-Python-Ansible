@@ -44,9 +44,9 @@
           mail:
                 host: smtp.gmail.com
                 port: 465
-                username: tapdeb26@gmail.com
-                password: 12345678t..
-                to: Tapajyoti Deb <tapajyotideb@gmail.com>
+                username: t*******@gmail.com
+                password: ***********
+                to: Tapajyoti Deb <***********@gmail.com>
                 subject: Ansible-report
                 body: Namenode has been successfully provisioned in {{ groups['master'][0] }}
           delegate_to: localhost 
@@ -54,16 +54,16 @@
 #        - name: Send notification message via Nexmo
 #          nexmo:
 #                api_key: dcf4f4c8
-#                api_secret: CxAMTgonuushpRj5
-#                src: 917005275355
-#                dest: 918209306937
+#                api_secret: CxAMTgo**********
+#                src: 91***********
+#                dest: 91***********
 #                msg: 'done donaa don done completed'
 #          delegate_to: localhost
 
 #        - twilio:
 #                msg: config is done.
-#                account_sid: ACa1c3a661a7ab9967293ac9e060329011
-#                auth_token: 981a2a38b4567faaa4e52ea784ff1445
+#                account_sid: ACa1c3a661a7ab99****************
+#                auth_token: 981a2a38b4567faaa4***************
 #                from_number: +15005550006
-#                to_number: +919479569278
+#                to_number: +919479*******
 #          delegate_to: localhost
