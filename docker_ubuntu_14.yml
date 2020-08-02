@@ -1,0 +1,49 @@
+- hosts: docker
+  tasks:
+        - name: Creating epel repository in yum
+          copy:
+                dest: "/etc/yum.repos.d/epel_myrepo.repo"
+                content: |
+                        [epel]
+                        baseurl=https://dl.fedoraproject.org/pub/epel/7/x86_64/
+                        gpgcheck=0
+
+                        [dock]
+                        baseurl=file:///dv
+                        gpgcheck=0
+        
+        - name: sending docker package
+          copy:
+                dest: "/dv"
+                src: "/root/Desktop/rhel7_extra_new_rpm/docker/"
+                        
+        - copy:
+                src: "/root/Desktop/rhel7_5_software_extras/"
+                dest: "/root/"
+
+        - name: Installing python2-pip
+          package: 
+                name: python2-pip
+                state: present       
+       
+        - name: Installing docker-py package
+          command: pip2 install docker-py
+        
+        - name: Installing docker-ce
+          package:
+                name: "docker-ce"
+                state: present        
+                 
+        - systemd:
+                name: "docker"
+                state: started
+                
+        - docker_image:
+                name: "ubuntu:14.04"
+                load_path: "/root/ubuntu-14.04.tar"
+                state: present
+           
+                  
+                
+                
+                  
